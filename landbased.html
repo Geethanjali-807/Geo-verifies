@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Land Insight Portal</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f2f1, #ffffff);
+      padding: 40px;
+      text-align: center;
+    }
+    h1 {
+      color: #00695c;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #info {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+    .card {
+      background: #f1f8e9;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: inline-block;
+      text-align: left;
+    }
+    #qrcode {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌍 Land Insight Portal</h1>
+  <input type="text" id="landID" placeholder="Enter Land ID (e.g. TN12345)">
+  <button onclick="checkLand()">Check Land</button>
+
+  <div id="info"></div>
+  <div id="qrcode"></div>
+
+  <!-- QR Code Library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script>
+    const landData = {
+      "TN12345": {
+        owner: "Ramesh Kumar",
+        area: "2400 sqft",
+        location: "Aminjikkarai",
+        waterFacility: "✅ Available",
+        landType: "Agricultural",
+        disasterRisk: "🟢 Low"
+      },
+      "TN67890": {
+        owner: "Geetha S",
+        area: "1800 sqft",
+        location: "Anna Nagar",
+        waterFacility: "❌ Not Available",
+        landType: "Residential",
+        disasterRisk: "🟡 Moderate"
+      }
+    };
+
+    function checkLand() {
+      const id = document.getElementById("landID").value.trim();
+      const infoDiv = document.getElementById("info");
+      const qrDiv = document.getElementById("qrcode");
+      infoDiv.innerHTML = "";
+      qrDiv.innerHTML = "";
+
+      if (landData[id]) {
+        const data = landData[id];
+        const details = `
+          Owner: ${data.owner}
+          Area: ${data.area}
+          Location: ${data.location}
+          Water Facility: ${data.waterFacility}
+          Land Type: ${data.landType}
+          Disaster Risk: ${data.disasterRisk}
+        `;
+        infoDiv.innerHTML = `
+          <div class="card">
+            <strong>Owner:</strong> ${data.owner}<br>
+            <strong>Area:</strong> ${data.area}<br>
+            <strong>Location:</strong> ${data.location}<br>
+            <strong>Water Facility:</strong> ${data.waterFacility}<br>
+            <strong>Land Type:</strong> ${data.landType}<br>
+            <strong>Disaster Risk:</strong> ${data.disasterRisk}
+          </div>
+        `;
+        QRCode.toCanvas(details, { width: 200 }, function (error, canvas) {
+          if (error) console.error(error);
+          qrDiv.appendChild(canvas);
+        });
+      } else {
+        infoDiv.innerHTML = "⚠ Land ID not found. Please check and try again.";
+      }
+    }
+  </script>
+
+</body>
+</html>
